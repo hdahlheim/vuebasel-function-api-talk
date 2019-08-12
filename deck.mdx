@@ -1,95 +1,413 @@
 import {
   CodeSurferLayout,
-  CodeSurferColumnLayout,
 } from "code-surfer"
-import {
-  future
-} from 'mdx-deck/themes'
-import { oceanicNext } from "code-surfer"
+import custom from './theme'
+import { Appear, Notes, Image, Head } from 'mdx-deck'
+import { Split } from 'mdx-deck/layouts'
+import { oceanicNextPartial } from "code-surfer"
+import ThreeCGrid from './ThreeCGrid'
 
-export const themes = [ oceanicNext, future ]
+export const themes = [ custom, oceanicNextPartial ]
 
-# A look at the
-# Function API RFC
+
+<Head>
+  <title>My Presentation</title>
+</Head>
+
+
+<h1>
+A look at the
+<br/>
+Function API RFC
+</h1>
 
 ---
 
-# Hi 👋,
-# I’m Henning
+# Outline
+
+- Introduction
+- Vue 3
+- The RFC (or why everyone got mad)
+- Comparison to other frameworks
+- The RFC in detail
+- Code Examples
+- Q&A
 
 ---
 
+# Almost everything in this talk is subject to change
+
+---
+
+<div style={{textAlign: 'left'}}>
+<Appear>
+<h1 style={{margin: '1rem 0'}}>Hi 👋,</h1>
+<h1 style={{margin: '1rem 0'}}>I’m Henning</h1>
+<div>
+<strong>
+Software developer apprentice <span style={{color: '#FF8000'}}>@cyon.</span>
+<br/>
+Worked with Vue.js for over a year.
+</strong>
+</div>
+</Appear>
+</div>
+
+<Notes>
+
+This is a note
+
+</Notes>
+
+---
+
+<h1>
+Vue <span style={{color: '#48bb78'}}>3</span>
+</h1>
+
+---
+
+# The RFC
+
+---
+
+<Image src="./img/therfc.png" size="80%" />
+
+---
+
+<Image src="./img/damdamdam.png" size="70%" />
+
+---
+
+# 🔥🔥🔥
+
+---
+
+<Image src="./img/a2v3.png" size="60%" />
+
+---
+
+<Image src="./img/lookslikereact.jpg" size="50%" />
+
+---
+
+# They both have/had the same problem
+
+---
+
+# Extracting Logic
+
+---
+
+# Vue & React
+
+<ul>
+<Appear>
+<li>🍹 Mixins</li>
+<li>🎢 Higher order components (HOCs)</li>
+</Appear>
+</ul>
+
+---
+
+# ⚛️ React Hooks
+
+---
 
 <CodeSurferLayout>
 
 ```jsx title="React Component without hooks"
 import React from 'react'
 
-export default class MyComponent extends React.Component {
+class MyComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = { count: 0 };
   }
-  incremnet () {
+
+  increment () {
     this.setState({ count: this.state.count + 1 })
   }
+
   render () {
     return (
       <div>
         <p>You clicked {this.state.count} times</p>
         <button
-          onClick={this.incremnet}
+          onClick={this.increment}
         >Click me</button>
       </div>
     )
   }
 }
+
+export default MyComponent
 ```
 
-```jsx 4:9
+```jsx 4:11
 import React from 'react'
 
-export default class MyComponent extends React.Component {
+class MyComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = { count: 0 };
   }
-  incremnet () {
+
+  increment () {
     this.setState({ count: this.state.count + 1 })
   }
+
   render () {
     return (
       <div>
         <p>You clicked {this.state.count} times</p>
         <button
-          onClick={this.incremnet}
+          onClick={this.increment}
         >Click me</button>
       </div>
     )
   }
 }
+
+export default MyComponent
 ```
 
-```jsx 11:20
+```jsx 12:21
 import React from 'react'
 
-export default class MyComponent extends React.Component {
+class MyComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = { count: 0 };
   }
-  incremnet () {
+
+  increment () {
     this.setState({ count: this.state.count + 1 })
   }
+
   render () {
     return (
       <div>
         <p>You clicked {this.state.count} times</p>
         <button
-          onClick={this.incremnet}
+          onClick={this.increment}
         >Click me</button>
       </div>
     )
+  }
+}
+
+export default MyComponent
+```
+
+```jsx 1:23
+import React from 'react'
+
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { count: 0 };
+  }
+
+  increment () {
+    this.setState({ count: this.state.count + 1 })
+  }
+
+  render () {
+    return (
+      <div>
+        <p>You clicked {this.state.count} times</p>
+        <button
+          onClick={this.increment}
+        >Click me</button>
+      </div>
+    )
+  }
+}
+
+export default MyComponent
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```jsx title="React component with hooks"
+import React, { useState } from 'react'
+
+function MyComponent () {
+  const [count, setCount] = useState(0)
+  const increment = () => setCount(count + 1)
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={increment}>
+        Click me
+      </button>
+    </div>
+  )
+}
+
+export default MyComponent
+```
+
+```js 1,4:5
+import React, { useState } from 'react'
+
+function MyComponent () {
+  const [count, setCount] = useState(0)
+  const increment = () => setCount(count + 1)
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={increment}>
+        Click me
+      </button>
+    </div>
+  )
+}
+
+export default MyComponent
+```
+
+```js 7:14
+import React, { useState } from 'react'
+
+function MyComponent () {
+  const [count, setCount] = useState(0)
+  const increment = () => setCount(count + 1)
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={increment}>
+        Click me
+      </button>
+    </div>
+  )
+}
+
+export default MyComponent
+```
+
+```js 1:18
+import React, { useState } from 'react'
+
+function MyComponent () {
+  const [count, setCount] = useState(0)
+  const increment = () => setCount(count + 1)
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={increment}>
+        Click me
+      </button>
+    </div>
+  )
+}
+
+export default MyComponent
+```
+
+</CodeSurferLayout>
+
+---
+
+## The function api
+<ul>
+<Appear>
+<li>
+🎉 Purely additive.
+<span style={{ fontSize: '50%' }}> (The current API will not be replaced)</span>
+</li>
+<li>
+💪 It will work side by side with the current API.
+</li>
+<li>
+🤯 Even in the same component.
+</li>
+</Appear>
+</ul>
+
+---
+
+## What do we get?
+<Appear>
+
+**a new `setup()` method and a lot of functions**
+
+</Appear>
+
+---
+
+
+<CodeSurferLayout>
+
+```js title="setup()"
+export default {
+  setup () {
+    return {
+      // ...
+    }
+  }
+}
+```
+
+```js 1:7 subtitle="everything returned from 'setup' is available in render"
+export default {
+  setup () {
+    return {
+      // ...
+    }
+  }
+}
+```
+
+```js 1:7 subtitle="'setup' takes two arguments"
+export default {
+  setup (props, context) {
+    return {
+      // ...
+    }
+  }
+}
+```
+
+```js 1:7 subtitle="'this' is not availably in setup"
+export default {
+  setup (props, context) {
+    return {
+      // ...
+    }
+  }
+}
+```
+
+```js 1:7 subtitle="'props' gives access to all props defined on the component"
+export default {
+  props:{
+    msg: String
+  },
+  setup (props, context) {
+    console.log(props.msg)
+  }
+}
+```
+
+```js 3:8 subtitle="'context' exposes everything else"
+export default {
+  setup (props, context) {
+    // context.attrs
+    // context.slots
+    // context.refs
+    // context.emit
+    // context.parent
+    // context.root
   }
 }
 ```
@@ -98,46 +416,46 @@ export default class MyComponent extends React.Component {
 
 ---
 
+<ThreeCGrid>
+<code>value</code>
+<code>state</code>
+<code>computed</code>
+<code>watch</code>
+<code>provide</code>
+<code>inject</code>
+<code>onActivated</code>
+<code>onDeactivated</code>
+<code>onBeforeMount</code>
+<code>onBeforeUpdate</code>
+<code>onCreated</code>
+<code>onUpdated</code>
+<code>onUnmounted</code>
+<code>onDestroyed</code>
+<code>onBeforeDestroy</code>
+<code>createComponent</code>
+<code>createElement</code>
+</ThreeCGrid>
 
-<CodeSurferLayout>
 
-```jsx title="React component with hooks"
-import React, { useState } from 'react'
 
-function Example() {
-  const [count, setCount] = useState(0)
-  const increment = () => setCount(count + 1)
+---
 
-  return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={increment}>
-        Click me
-      </button>
-    </div>
-  )
-}
-```
 
-```js 4:5
-import React, { useState } from 'react'
+## Why all of this
 
-function Example() {
-  const [count, setCount] = useState(0)
-  const increment = () => setCount(count + 1)
-
-  return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={increment}>
-        Click me
-      </button>
-    </div>
-  )
-}
-```
-
-</CodeSurferLayout>
+<ul>
+<Appear>
+<li >
+🧩 Improved logic reuse
+</li>
+<li >
+🛠 Better TypeScript support
+</li>
+<li >
+🗜 Smaller bundle size
+</li>
+</Appear>
+</ul>
 
 ---
 
@@ -239,13 +557,7 @@ export default {
 </script>
 ```
 
-</CodeSurferLayout>
-
----
-
-<CodeSurferLayout>
-
-```jsx title="Vue 3 component with setup"
+```jsx 1:21 title="Vue 3 function api"
 <template>
   <div>
     <p>You clicked {{ count }} times</p>
@@ -255,6 +567,7 @@ export default {
 
 <script>
 import { value } from 'vue'
+
 export default {
   setup () {
     const count = value(0)
@@ -278,6 +591,7 @@ export default {
 
 <script>
 import { value } from 'vue'
+
 export default {
   setup () {
     const count = value(0)
@@ -291,7 +605,7 @@ export default {
 </script>
 ```
 
-```jsx 11:13
+```jsx 12:14
 <template>
   <div>
     <p>You clicked {{ count }} times</p>
@@ -301,6 +615,7 @@ export default {
 
 <script>
 import { value } from 'vue'
+
 export default {
   setup () {
     const count = value(0)
@@ -314,7 +629,7 @@ export default {
 </script>
 ```
 
-```jsx 14:17
+```jsx 15:18
 <template>
   <div>
     <p>You clicked {{ count }} times</p>
@@ -324,6 +639,612 @@ export default {
 
 <script>
 import { value } from 'vue'
+
+export default {
+  setup () {
+    const count = value(0)
+    const increment = () => count.value++
+    return {
+      count,
+      increment
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:21
+<template>
+  <div>
+    <p>You clicked {{ count }} times</p>
+    <button @click="increment">Click me</button>
+  </div>
+</template>
+
+<script>
+import { value } from 'vue'
+
+export default {
+  setup () {
+    const count = value(0)
+    const increment = () => count.value++
+    return {
+      count,
+      increment
+    }
+  }
+}
+</script>
+```
+
+</CodeSurferLayout>
+
+---
+
+## Not all components are this simple
+
+---
+
+## What about lifecycles
+
+---
+
+<CodeSurferLayout>
+
+```jsx
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 13:18
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 19:24
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value } from 'vue'
+export default {
+  data () {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    return {
+      x,
+      y
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    return {
+      x,
+      y,
+      updateMouse
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    return {
+      x,
+      y,
+      updateMouse
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', updateMouse)
+    })
+    return {
+      x,
+      y,
+      updateMouse
+    }
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', updateMouse)
+    })
+    return {
+      x,
+      y,
+      updateMouse
+    }
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', updateMouse)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('mousemove', updateMouse)
+    })
+    return {
+      x,
+      y,
+      updateMouse
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:30
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', updateMouse)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('mousemove', updateMouse)
+    })
+    return {
+      x,
+      y
+    }
+  }
+}
+</script>
+```
+
+</CodeSurferLayout>
+
+---
+
+# Extracting Logic
+
+---
+
+<CodeSurferLayout>
+
+```jsx 1:27
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', updateMouse)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('mousemove', updateMouse)
+    })
+    return {
+      x,
+      y
+    }
+  }
+}
+</script>
+```
+
+```jsx 9:20
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+export default {
+  setup () {
+    const x = value(0)
+    const y = value(0)
+    const updateMouse = (e) => {
+      x.value = e.pageX
+      y.value = e.pageY
+    }
+    onMounted(() => {
+      window.addEventListener('mousemove', updateMouse)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('mousemove', updateMouse)
+    })
+    return {
+      x,
+      y
+    }
+  }
+}
+</script>
+```
+
+```jsx
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+
+function useMousePosition () {
+  const x = value(0)
+  const y = value(0)
+  const updateMouse = (e) => {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+  onMounted(() => {
+    window.addEventListener('mousemove', updateMouse)
+  })
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', updateMouse)
+  })
+  return { x, y }
+}
+
+export default {
+  setup () {
+    return {
+      ...useMousePosition()
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:31
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value, onMounted, onUnmounted } from 'vue'
+
+function useMousePosition () {
+  const x = value(0)
+  const y = value(0)
+  const updateMouse = (e) => {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+  onMounted(() => {
+    window.addEventListener('mousemove', updateMouse)
+  })
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', updateMouse)
+  })
+  return { x, y }
+}
+
+export default {
+  setup () {
+    return {
+      ...useMousePosition()
+    }
+  }
+}
+</script>
+```
+
+</CodeSurferLayout>
+
+
+---
+
+<div style={{textAlign: 'left'}}>
+<h1>
+<Appear>
+<span>Henning,<br/></span>
+<span>that’s cool and all</span>
+<span><br/>but<br/></span>
+<span>I want this now!!</span>
+</Appear>
+</h1>
+</div>
+
+---
+
+<CodeSurferLayout>
+
+```bash
+npm i -s vue-function-api
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```js
+import { plugin } from 'vue-function-api'
+
+Vue.use(plugin)
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```jsx 1:22
+<template>
+  <div>
+    <p>You clicked {{ count }} times</p>
+    <button @click="increment">Click me</button>
+  </div>
+</template>
+
+<script>
+import { value } from 'vue'
+
 export default {
   setup () {
     const count = value(0)
@@ -346,7 +1267,8 @@ export default {
 </template>
 
 <script>
-import { value } from 'vue'
+import { value } from 'vue-function-api'
+
 export default {
   setup () {
     const count = value(0)
@@ -362,59 +1284,11 @@ export default {
 
 </CodeSurferLayout>
 
----
-
-<CodeSurferColumnLayout>
-
-```jsx
-<template>
-  <div>
-    <p>You clicked {{ count }} times</p>
-    <button @click="increment">Click me</button>
-  </div>
-</template>
-
-<script>
-import { value } from 'vue'
-export default {
-  setup () {
-    const count = value(0)
-    const increment = () => count.value++
-    return {
-      count,
-      increment
-    }
-  }
-}
-</script>
-```
-</CodeSurferColumnLayout>
-
-<CodeSurferColumnLayout>
-
-```jsx
-<template>
-  <div>
-    <p>You clicked {{ count }} times</p>
-    <button @click="increment">Click me</button>
-  </div>
-</template>
-
-<script>
-import { value } from 'vue'
-export default {
-  setup () {
-    const count = value(0)
-    const increment = () => count.value++
-    return {
-      count,
-      increment
-    }
-  }
-}
-</script>
-```
-
-</CodeSurferColumnLayout>
 
 ---
+
+# Thanks 🙏
+
+---
+
+# Questions?
