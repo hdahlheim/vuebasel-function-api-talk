@@ -11,7 +11,7 @@ export const themes = [ custom, oceanicNextPartial ]
 
 
 <Head>
-  <title>My Presentation</title>
+  <title>Vue function API</title>
 </Head>
 
 
@@ -28,7 +28,6 @@ Function API RFC
 - Introduction
 - Vue 3
 - The RFC (or why everyone got mad)
-- Comparison to other frameworks
 - The RFC in detail
 - Code Examples
 - Q&A
@@ -90,23 +89,17 @@ Vue <span style={{color: '#48bb78'}}>3</span>
 <Image src="./img/lookslikereact.jpg" size="50%" />
 
 ---
+<!--
+# So what about React?
 
-# They both have/had the same problem
+<Notes>
 
----
+So lats talk a bit about react
+because react actually went through
+almost the same change just a few
+months prior
 
-# Extracting Logic
-
----
-
-# Vue & React
-
-<ul>
-<Appear>
-<li>🍹 Mixins</li>
-<li>🎢 Higher order components (HOCs)</li>
-</Appear>
-</ul>
+</Notes>
 
 ---
 
@@ -122,7 +115,8 @@ import React from 'react'
 class MyComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { count: 0 };
+    this.state = { count: 0 }
+    this.increment = this.increment.bind(this)
   }
 
   increment () {
@@ -144,13 +138,14 @@ class MyComponent extends React.Component {
 export default MyComponent
 ```
 
-```jsx 4:11
+```jsx 4:12
 import React from 'react'
 
 class MyComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { count: 0 };
+    this.state = { count: 0 }
+    this.increment = this.increment.bind(this)
   }
 
   increment () {
@@ -172,13 +167,14 @@ class MyComponent extends React.Component {
 export default MyComponent
 ```
 
-```jsx 12:21
+```jsx 12:22
 import React from 'react'
 
 class MyComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { count: 0 };
+    this.state = { count: 0 }
+    this.increment = this.increment.bind(this)
   }
 
   increment () {
@@ -200,13 +196,14 @@ class MyComponent extends React.Component {
 export default MyComponent
 ```
 
-```jsx 1:23
+```jsx 1:24
 import React from 'react'
 
 class MyComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { count: 0 };
+    this.state = { count: 0 }
+    this.increment = this.increment.bind(this)
   }
 
   increment () {
@@ -229,6 +226,19 @@ export default MyComponent
 ```
 
 </CodeSurferLayout>
+
+<Notes>
+
+So for those unfamiliar with react
+
+this was for the longest time how you write a statefull react component
+
+using the ES2015 class syntax
+
+**this**
+
+</Notes>
+
 
 ---
 
@@ -316,9 +326,24 @@ export default MyComponent
 
 </CodeSurferLayout>
 
----
+<Notes>
 
-## The function api
+So this how you write a
+react component with hooks
+
+you just useState and be done with it
+
+the reason I’m showing you this is
+because when hooks were introduced
+the react community was quite happy
+
+but it also did not come with a deprecation of the old api ;) so this might have something todo with it
+
+</Notes>
+
+--- -->
+
+## The function API
 <ul>
 <Appear>
 <li>
@@ -339,7 +364,7 @@ export default MyComponent
 ## What do we get?
 <Appear>
 
-**a new `setup()` method and a lot of functions**
+**a new `setup()` method and composition functions**
 
 </Appear>
 
@@ -368,9 +393,9 @@ export default {
 }
 ```
 
-```js 1:7 subtitle="'setup' takes two arguments"
+```js 1:7 subtitle="'this' is not availably in setup"
 export default {
-  setup (props, context) {
+  setup () {
     return {
       // ...
     }
@@ -378,7 +403,8 @@ export default {
 }
 ```
 
-```js 1:7 subtitle="'this' is not availably in setup"
+
+```js 1:7 subtitle="'setup' takes two arguments"
 export default {
   setup (props, context) {
     return {
@@ -414,6 +440,23 @@ export default {
 
 </CodeSurferLayout>
 
+<Notes>
+
+Setup gets called first after all props are resolved
+
+</Notes>
+
+---
+
+## The composition functions
+
+<Notes>
+
+inside of setup you can use functions
+
+</Notes>
+
+
 ---
 
 <ThreeCGrid>
@@ -436,7 +479,13 @@ export default {
 <code>createElement</code>
 </ThreeCGrid>
 
+<Notes>
 
+These are all of the functions added to vue
+or at least all that i was able to find are reference to
+
+**value** **state** **onXXX** and **createComponent** **createElement**
+</Notes>
 
 ---
 
@@ -557,7 +606,7 @@ export default {
 </script>
 ```
 
-```jsx 1:21 title="Vue 3 function api"
+```jsx 1:21 title="Vue 3 function API"
 <template>
   <div>
     <p>You clicked {{ count }} times</p>
@@ -679,6 +728,18 @@ export default {
 
 </CodeSurferLayout>
 
+<Notes>
+
+constants value
+
+update the value of this constant by incrementing it by one
+
+the reason for this is because javascript dose not pass
+references to primitives like Numbers or Strings so they get wrapped
+and are accessed using .value
+
+</Notes>
+
 ---
 
 ## Not all components are this simple
@@ -778,12 +839,43 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:26
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
+export default {
+  data () {
+    return {
+      x: 0,
+      y: 0
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', this.updateMouse)
+  },
+  destroyed () {
+    window.removeEventListener('mousemove', this.updateMouse)
+  },
+  methods: {
+    updateMouse (e) {
+      this.x = e.pageX
+      this.y = e.pageY
+    }
+  }
+}
+</script>
+```
+
+```jsx 1:28
+<template>
+  <div>Mouse is at {{ x }}, {{ y }}</div>
+</template>
+
+<script>
+import { value } from 'vue'
+
 export default {
   data () {
     return {
@@ -814,36 +906,7 @@ export default {
 
 <script>
 import { value } from 'vue'
-export default {
-  data () {
-    return {
-      x: 0,
-      y: 0
-    }
-  },
-  mounted () {
-    window.addEventListener('mousemove', this.updateMouse)
-  },
-  destroyed () {
-    window.removeEventListener('mousemove', this.updateMouse)
-  },
-  methods: {
-    updateMouse (e) {
-      this.x = e.pageX
-      this.y = e.pageY
-    }
-  }
-}
-</script>
-```
 
-```jsx 1:30
-<template>
-  <div>Mouse is at {{ x }}, {{ y }}</div>
-</template>
-
-<script>
-import { value } from 'vue'
 export default {
   setup () {
     const x = value(0)
@@ -869,21 +932,24 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:31
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     return {
       x,
       y,
@@ -900,21 +966,24 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     return {
       x,
       y,
@@ -931,24 +1000,28 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     onMounted(() => {
       window.addEventListener('mousemove', updateMouse)
     })
+
     return {
       x,
       y,
@@ -962,24 +1035,28 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted, onUnmounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     onMounted(() => {
       window.addEventListener('mousemove', updateMouse)
     })
+
     return {
       x,
       y,
@@ -993,27 +1070,32 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted, onUnmounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     onMounted(() => {
       window.addEventListener('mousemove', updateMouse)
     })
+
     onUnmounted(() => {
       window.removeEventListener('mousemove', updateMouse)
     })
+
     return {
       x,
       y,
@@ -1024,27 +1106,32 @@ export default {
 </script>
 ```
 
-```jsx 1:30
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted, onUnmounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     onMounted(() => {
       window.addEventListener('mousemove', updateMouse)
     })
+
     onUnmounted(() => {
       window.removeEventListener('mousemove', updateMouse)
     })
+
     return {
       x,
       y
@@ -1064,27 +1151,32 @@ export default {
 
 <CodeSurferLayout>
 
-```jsx 1:27
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted, onUnmounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     onMounted(() => {
       window.addEventListener('mousemove', updateMouse)
     })
+
     onUnmounted(() => {
       window.removeEventListener('mousemove', updateMouse)
     })
+
     return {
       x,
       y
@@ -1094,24 +1186,28 @@ export default {
 </script>
 ```
 
-```jsx 9:20
+```jsx 10:24
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
 
 <script>
 import { value, onMounted, onUnmounted } from 'vue'
+
 export default {
   setup () {
     const x = value(0)
     const y = value(0)
+
     const updateMouse = (e) => {
       x.value = e.pageX
       y.value = e.pageY
     }
+
     onMounted(() => {
       window.addEventListener('mousemove', updateMouse)
     })
+
     onUnmounted(() => {
       window.removeEventListener('mousemove', updateMouse)
     })
@@ -1135,16 +1231,20 @@ import { value, onMounted, onUnmounted } from 'vue'
 function useMousePosition () {
   const x = value(0)
   const y = value(0)
+
   const updateMouse = (e) => {
     x.value = e.pageX
     y.value = e.pageY
   }
+
   onMounted(() => {
     window.addEventListener('mousemove', updateMouse)
   })
+
   onUnmounted(() => {
     window.removeEventListener('mousemove', updateMouse)
   })
+
   return { x, y }
 }
 
@@ -1158,7 +1258,7 @@ export default {
 </script>
 ```
 
-```jsx 1:31
+```jsx 1:32
 <template>
   <div>Mouse is at {{ x }}, {{ y }}</div>
 </template>
@@ -1194,6 +1294,11 @@ export default {
 
 </CodeSurferLayout>
 
+<Notes>
+
+Nothing is tied to the component
+
+</Notes>
 
 ---
 
