@@ -1,7 +1,7 @@
 export default {
   // add a custom font
   font: "'Work Sans', sans-serif",
-  monospace: "'IBM Plex Mono'",
+  monospace: "'IBM Plex Mono', monospace",
   colors: {
     text: '#2D3748',
   },
