@@ -1,6 +1,6 @@
-# MDX Deck + Code Surfer template
+# Vue Function API talk 
 
-This project was generated with the `npm init code-surfer-deck` command.
+Talk about the Vue Function API RFC.
 
 ## Development
 
